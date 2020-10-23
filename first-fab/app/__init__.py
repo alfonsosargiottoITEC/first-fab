@@ -1,34 +1,21 @@
-import logging
+import logging ## import de logging
 
+#### imports de flasks
 from flask import Flask
 from flask_appbuilder import SQLA, AppBuilder
-from flask_appbuilder.menu import Menu
-from .sec import MySecurityManager
 
-"""
- Logging configuration
-"""
 
+
+### LOGGING CONFIG ###############
 logging.basicConfig(format="%(asctime)s:%(levelname)s:%(name)s:%(message)s")
 logging.getLogger().setLevel(logging.DEBUG)
 
+######## "ARMAMOS" LA APP #####################
 app = Flask(__name__)
 app.config.from_object("config")
 db = SQLA(app)
-appbuilder = AppBuilder(app, db.session, menu=Menu(reverse=False), security_manager_class=MySecurityManager)
+appbuilder = AppBuilder(app, db.session)
 
 
-"""
-from sqlalchemy.engine import Engine
-from sqlalchemy import event
-
-#Only include this for SQLLite constraints
-@event.listens_for(Engine, "connect")
-def set_sqlite_pragma(dbapi_connection, connection_record):
-    # Will force sqllite contraint foreign keys
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA foreign_keys=ON")
-    cursor.close()
-"""
-
-from . import views
+######### importamos todas las views ############# debe hacerse al final para evitar circular import
+from . import all_views
